@@ -1,6 +1,7 @@
 package com.ista.springboot.web.app.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,35 +21,35 @@ public class Matricula implements Serializable {
     @Column(name = "numero_matricula", nullable = false, unique = true, length = 20)
     private String numeroMatricula;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "estudiante_id", nullable = false)
     private Estudiante estudiante;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "nivel_id", nullable = false)
     private Nivel nivel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "periodo_id", nullable = false)
     private Periodo periodo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "institucion_id", nullable = false)
     private Institucion institucion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "paralelo_id", nullable = false)
     private Paralelo paralelo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tipo_matricula_id", nullable = false)
     private TipoMatricula tipoMatricula;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "carrera_id", nullable = false)
     private Carrera carrera;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "jornada_id", nullable = false)
     private Jornada jornada;
 
@@ -66,6 +67,7 @@ public class Matricula implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "matricula", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<DetalleMatricula> detallesMatricula;
 
     @PrePersist

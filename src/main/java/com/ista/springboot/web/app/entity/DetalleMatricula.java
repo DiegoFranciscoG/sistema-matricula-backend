@@ -15,11 +15,11 @@ public class DetalleMatricula implements Serializable {
     @Column(name = "id_detalle")
     private Integer idDetalle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "matricula_id", nullable = false)
     private Matricula matricula;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "asignatura_id", nullable = false)
     private Asignatura asignatura;
 

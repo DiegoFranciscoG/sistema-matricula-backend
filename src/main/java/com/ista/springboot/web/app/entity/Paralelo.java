@@ -1,6 +1,7 @@
 package com.ista.springboot.web.app.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Paralelo implements Serializable {
     @Column(nullable = false, unique = true, length = 50)
     private String nombre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "jornada_id", nullable = false)
     private Jornada jornada;
 
@@ -30,6 +31,7 @@ public class Paralelo implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "paralelo")
+    @JsonIgnore
     private List<Matricula> matriculas;
 
     @PrePersist
@@ -43,7 +45,7 @@ public class Paralelo implements Serializable {
         updatedAt = LocalDateTime.now();
     }
 
-    // Getters y Setters
+    // Getters y Setters (copiar del código anterior)
     public Integer getIdParalelo() {
         return idParalelo;
     }

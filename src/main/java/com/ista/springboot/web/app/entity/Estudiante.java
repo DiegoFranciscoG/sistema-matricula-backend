@@ -1,6 +1,7 @@
 package com.ista.springboot.web.app.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,6 +50,7 @@ public class Estudiante implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Matricula> matriculas;
 
     @PrePersist
@@ -66,7 +68,7 @@ public class Estudiante implements Serializable {
         Activo, Inactivo
     }
 
-    // Getters y Setters
+    // Getters y Setters (sin cambios)
     public Integer getIdEstudiante() {
         return idEstudiante;
     }

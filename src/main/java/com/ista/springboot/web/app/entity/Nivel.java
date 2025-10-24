@@ -1,6 +1,7 @@
 package com.ista.springboot.web.app.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,9 +30,11 @@ public class Nivel implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "nivel")
+    @JsonIgnore
     private List<Asignatura> asignaturas;
 
     @OneToMany(mappedBy = "nivel")
+    @JsonIgnore
     private List<Matricula> matriculas;
 
     @PrePersist
@@ -45,7 +48,7 @@ public class Nivel implements Serializable {
         updatedAt = LocalDateTime.now();
     }
 
-    // Getters y Setters
+    // Getters y Setters (sin cambios)
     public Integer getIdNivel() {
         return idNivel;
     }

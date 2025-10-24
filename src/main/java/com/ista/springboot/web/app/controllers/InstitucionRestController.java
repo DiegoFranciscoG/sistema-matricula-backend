@@ -4,10 +4,11 @@ import com.ista.springboot.web.app.entity.Institucion;
 import com.ista.springboot.web.app.service.IInstitucionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class InstitucionRestController {
@@ -21,29 +22,41 @@ public class InstitucionRestController {
     }
 
     @GetMapping("/instituciones/{id}")
-    public Institucion show(@PathVariable Integer id) {
-        return institucionService.findById(id);
+    public ResponseEntity<Institucion> show(@PathVariable Integer id) {
+        Institucion institucion = institucionService.findById(id);
+        if (institucion == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(institucion);
     }
 
     @PostMapping("/instituciones")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Institucion create(@RequestBody Institucion institucion) {
-        return institucionService.save(institucion);
+    public ResponseEntity<Institucion> create(@RequestBody Institucion institucion) {
+        institucion.setIdInstitucion(null);
+        Institucion nuevaInstitucion = institucionService.save(institucion);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaInstitucion);
     }
 
     @PutMapping("/instituciones/{id}")
-    public Institucion update(@RequestBody Institucion institucion, @PathVariable Integer id) {
+    public ResponseEntity<Institucion> update(@RequestBody Institucion institucion, @PathVariable Integer id) {
         Institucion institucionActual = institucionService.findById(id);
+        if (institucionActual == null) {
+            return ResponseEntity.notFound().build();
+        }
         
         institucionActual.setNombre(institucion.getNombre());
         institucionActual.setTipoEducativo(institucion.getTipoEducativo());
         
-        return institucionService.save(institucionActual);
+        return ResponseEntity.ok(institucionService.save(institucionActual));
     }
 
     @DeleteMapping("/instituciones/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        Institucion institucion = institucionService.findById(id);
+        if (institucion == null) {
+            return ResponseEntity.notFound().build();
+        }
         institucionService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -4,10 +4,11 @@ import com.ista.springboot.web.app.entity.Matricula;
 import com.ista.springboot.web.app.service.IMatriculaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class MatriculaRestController {
@@ -21,13 +22,21 @@ public class MatriculaRestController {
     }
 
     @GetMapping("/matriculas/{id}")
-    public Matricula show(@PathVariable Integer id) {
-        return matriculaService.findById(id);
+    public ResponseEntity<Matricula> show(@PathVariable Integer id) {
+        Matricula matricula = matriculaService.findById(id);
+        if (matricula == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(matricula);
     }
 
     @GetMapping("/matriculas/numero/{numeroMatricula}")
-    public Matricula showByNumero(@PathVariable String numeroMatricula) {
-        return matriculaService.findByNumeroMatricula(numeroMatricula);
+    public ResponseEntity<Matricula> showByNumero(@PathVariable String numeroMatricula) {
+        Matricula matricula = matriculaService.findByNumeroMatricula(numeroMatricula);
+        if (matricula == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(matricula);
     }
 
     @GetMapping("/matriculas/estudiante/{estudianteId}")
@@ -41,14 +50,19 @@ public class MatriculaRestController {
     }
 
     @PostMapping("/matriculas")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Matricula create(@RequestBody Matricula matricula) {
-        return matriculaService.save(matricula);
+    public ResponseEntity<Matricula> create(@RequestBody Matricula matricula) {
+        // IMPORTANTE: No enviar idMatricula en el JSON
+        matricula.setIdMatricula(null);
+        Matricula nuevaMatricula = matriculaService.save(matricula);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaMatricula);
     }
 
     @PutMapping("/matriculas/{id}")
-    public Matricula update(@RequestBody Matricula matricula, @PathVariable Integer id) {
+    public ResponseEntity<Matricula> update(@RequestBody Matricula matricula, @PathVariable Integer id) {
         Matricula matriculaActual = matriculaService.findById(id);
+        if (matriculaActual == null) {
+            return ResponseEntity.notFound().build();
+        }
         
         matriculaActual.setNumeroMatricula(matricula.getNumeroMatricula());
         matriculaActual.setEstudiante(matricula.getEstudiante());
@@ -62,12 +76,16 @@ public class MatriculaRestController {
         matriculaActual.setFechaMatricula(matricula.getFechaMatricula());
         matriculaActual.setEstado(matricula.getEstado());
         
-        return matriculaService.save(matriculaActual);
+        return ResponseEntity.ok(matriculaService.save(matriculaActual));
     }
 
     @DeleteMapping("/matriculas/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        Matricula matricula = matriculaService.findById(id);
+        if (matricula == null) {
+            return ResponseEntity.notFound().build();
+        }
         matriculaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
